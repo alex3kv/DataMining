@@ -3,7 +3,7 @@ import datetime as dt
 import dotenv
 import requests
 from urllib.parse import urljoin
-import bs4
+from bs4 import BeautifulSoup
 import pymongo as pm
 
 dotenv.load_dotenv('.env')
@@ -26,56 +26,47 @@ MONTHS = {
 
 class MagnitParser:
 
-    def __init__(self, start_url):
-        self.url = start_url
+    def __init__(self, url):
+        self.url = url
         db = pm.MongoClient(os.getenv('DATA_BASE'))
         self.db = db['parser']
 
-    def _get(self, url: str) -> bs4.BeautifulSoup:        
+    def _get(self, url: str) -> BeautifulSoup:        
         response = requests.get(url)
-        return bs4.BeautifulSoup(response.text, 'lxml')
+        return BeautifulSoup(response.text, 'lxml')
 
     def run(self):
-
         soup = self._get(self.url)
-
         for product in self.parse(soup):
             self.save(product)
 
-    def parse(self, soup: bs4.BeautifulSoup) -> dict:
+    def parse(self, soup: BeautifulSoup) -> dict:
         catalog = soup.find('div', attrs={'class': 'сatalogue__main'})
 
         for product in catalog.findChildren('a'):
             try:
-                pr_data = self.get_product(product)
+                result = self.get_product(product)
             except AttributeError:
                 continue
-            yield pr_data
+            yield result
 
-    def get_product(self, product_soup):
-        dt_parser = self.date_parse(product_soup.find('div', attrs={'class': 'card-sale__date'}).text)
+    def get_product(self, soup):
+                
+        result = {}
+        
+        result["url"] = urljoin(self.url, soup.attrs.get('href'))
+        result["promo_name"] = soup.find('div', attrs={'class': 'card-sale__header'}).text
+        result["product_name"] = soup.find('div', attrs={'class': 'card-sale__title'}).text
+        result["old_price"] = float('.'.join(itm for itm in soup.find('div', attrs={'class': 'label__price_old'}).text.split()))
+        result["new_price"] = float('.'.join(itm for itm in soup.find('div', attrs={'class': 'label__price_new'}).text.split()))
+        result["image_url"] = urljoin(self.url, soup.find('img').attrs.get('data-src'))
 
-        product_template = {
-            'url': lambda soups: urljoin(self.url, soups.attrs.get('href')),
-            'promo_name': lambda soups: soups.find('div', attrs={'class': 'card-sale__header'}).text,
+        dt_parser = self.date_parse(soup.find('div', attrs={'class': 'card-sale__date'}).text)
 
-            'product_name': lambda soups: str(soups.find('div', attrs={'class': 'card-sale__title'}).text),
+        result["date_from"] = next(dt_parser)
+        result["date_to"] = next(dt_parser)                   
 
-            'old_price': lambda soups: float('.'.join(itm for itm in soups.find('div', attrs={'class': 'label__price_old'}).text.split())),
-
-            'new_price': lambda soups: float('.'.join(itm for itm in soups.find('div', attrs={'class': 'label__price_new'}).text.split())),
-
-            'image_url': lambda soups: urljoin(self.url, soups.find('img').attrs.get('data-src')),
-            'date_from': lambda _: next(dt_parser),
-            'date_to': lambda _: next(dt_parser),
-        }
-        product_result = {}
-        for key, value in product_template.items():
-            try:
-                product_result[key] = value(product_soup)
-            except (AttributeError, ValueError, StopIteration):
-                continue
-        return product_result
+        return result
 
     @staticmethod
     def date_parse(date_string: str):
