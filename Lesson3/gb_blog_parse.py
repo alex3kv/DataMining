@@ -17,6 +17,10 @@ class GbBlogParse:
         soup = bs4.BeautifulSoup(response.text, 'lxml')
         return soup
 
+    def __get_api(self, url, params):
+        response = requests.get(url, params)        
+        return response.json()
+
     def run(self, url=None):
         if not url:
             url = self.start_url
@@ -33,10 +37,8 @@ class GbBlogParse:
 
     def parse(self, soup):
         ul_pag = soup.find('ul', attrs={'class': 'gb__pagination'})
-        paginations = set(
-            urljoin(self.start_url, url.get('href')) for url in ul_pag.find_all('a') if url.attrs.get('href'))
-        posts = set(
-            urljoin(self.start_url, url.get('href')) for url in soup.find_all('a', attrs={'class': 'post-item__title'}))
+        paginations = set(urljoin(self.start_url, url.get('href')) for url in ul_pag.find_all('a') if url.attrs.get('href'))
+        posts = set(urljoin(self.start_url, url.get('href')) for url in soup.find_all('a', attrs={'class': 'post-item__title'}))
         return posts, paginations
 
     def page_parse(self, soup, url) -> dict:
@@ -48,23 +50,36 @@ class GbBlogParse:
             'post_data': {
                 'url': url,
                 'title': soup.find('h1').text,
-                'image': soup.find('div', attrs={'class': 'blogpost-content'}).find('img').get('src') if soup.find(
-                    'div', attrs={'class': 'blogpost-content'}).find('img') else None,
+                'image': soup.find('div', attrs={'class': 'blogpost-content'}).find('img').get('src') if soup.find('div', attrs={'class': 'blogpost-content'}).find('img') else None,
                 'date': soup.find('div', attrs={'class': 'blogpost-date-views'}).find('time').get('datetime'),
             },
-            'writer': {'name': soup.find('div', attrs={'itemprop': 'author'}).text,
-                       'url': urljoin(self.start_url,
-                                      soup.find('div', attrs={'itemprop': 'author'}).parent.get('href'))},
-
+            'writer': {
+                'name': soup.find('div', attrs={'itemprop': 'author'}).text,
+                'url': urljoin(self.start_url, soup.find('div', attrs={'itemprop': 'author'}).parent.get('href'))
+                },
             'tags': [],
-
+            'comments':[]
         }
+
+        commentable_id = soup.find('comments').get('commentable-id')
+        comments = self.__get_api('https://geekbrains.ru/api/v2/comments?commentable_type=Post',{'commentable_id': commentable_id})
+
+        for item in comments:
+            comment = item['comment']
+            comment_data = {
+                'url': str(comment['id']),
+                'author': comment['user']['full_name'],
+                'text': comment['body']
+                }
+            data['comments'].append(comment_data)
+
         for tag in soup.find_all('a', attrs={'class': "small"}):
             tag_data = {
                 'url': urljoin(self.start_url, tag.get('href')),
                 'name': tag.text
             }
             data['tags'].append(tag_data)
+
         return data
 
     def get_comments(self, comments_soup):
