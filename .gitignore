@@ -5,4 +5,5 @@ obj
 logs
 *.tmp
 __pycache__
-.env
+*.db
+*.env
