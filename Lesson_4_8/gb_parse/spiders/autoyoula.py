@@ -50,6 +50,5 @@ class AutoyoulaSpider(scrapy.Spider):
         yield loader.load_item()
 
     def get_specifications(self, response):
-        return {itm.css('.AdvertSpecs_label__2JHnS::text').get(): itm.css(
-            '.AdvertSpecs_data__xK2Qx::text').get() or itm.css('a::text').get() for itm in
+        return {itm.css('.AdvertSpecs_label__2JHnS::text').get(): itm.css('.AdvertSpecs_data__xK2Qx::text').get() or itm.css('a::text').get() for itm in
                 response.css('.AdvertSpecs_row__ljPcX')}
