@@ -35,6 +35,9 @@
     <Compile Include="gb_parse\spiders\instagram.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gb_parse\spiders\zillow.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="gb_parse\spiders\__init__.py" />
     <Compile Include="gb_parse\__init__.py" />
     <Compile Include="Main.py" />
