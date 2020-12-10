@@ -3,7 +3,7 @@ from scrapy import Selector
 from scrapy.loader import ItemLoader
 
 from itemloaders.processors import TakeFirst, MapCompose
-from .items import AutoYoulaItem, HHVacancyItem
+from .items import AutoYoulaItem, HHVacancyItem, HHCompanyItem
 
 
 def get_specifications(itm):
@@ -44,3 +44,11 @@ class HHVacancyLoader(ItemLoader):
     description_out = TakeFirst()
     salary_in = ''.join
     salary_out = TakeFirst()
+
+class HHCompanyLoader(ItemLoader):
+    default_item_class = HHCompanyItem
+    name_out = TakeFirst()
+    url_out = TakeFirst()
+    company_url_out = TakeFirst()
+    description_in = ''.join
+    description_out = TakeFirst()

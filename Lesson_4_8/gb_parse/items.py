@@ -2,7 +2,6 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/items.html
-
 import scrapy
 
 
@@ -28,3 +27,10 @@ class HHVacancyItem(scrapy.Item):
     description = scrapy.Field()
     skills = scrapy.Field()
     company_url = scrapy.Field()
+
+class HHCompanyItem(scrapy.Item):
+    _id = scrapy.Field()
+    url = scrapy.Field()    
+    name = scrapy.Field()    
+    company_url = scrapy.Field()
+    description = scrapy.Field()

@@ -1,15 +1,17 @@
 import scrapy
-from ..loaders import HHVacancyLoader
+from ..loaders import HHVacancyLoader, HHCompanyLoader
 
 
 class HhruSpider(scrapy.Spider):
     name = 'hhru'
     allowed_domains = ['hh.ru']
     start_urls = ['https://hh.ru/search/vacancy?schedule=remote&L_profession_id=0&area=113']
+    
     _xpath = {
         'pagination': '//div[@data-qa="pager-block"]//a[@data-qa="pager-page"]/@href',
         'vacancy_urls': '//a[@data-qa="vacancy-serp__vacancy-title"]/@href',
     }
+    
     vacancy_xpath = {
         "title": '//h1[@data-qa="vacancy-title"]/text()',
         "salary": '//p[@class="vacancy-salary"]//text()',
@@ -20,9 +22,8 @@ class HhruSpider(scrapy.Spider):
     
     company_xpath = {
         'name': '//h1/span[contains(@class, "company-header-title-name")]/text()',
-        'url': '//a[contains(@data-qa, "company-site")]/@href',
-        'description': '//div[contains(@data-qa, "company-description")]//text()',
-        
+        'company_url': '//a[contains(@data-qa, "company-site")]/@href',
+        'description': '//div[contains(@data-qa, "company-description")]//text()',        
     }
     
     def parse(self, response, **kwargs):
@@ -43,18 +44,10 @@ class HhruSpider(scrapy.Spider):
         yield response.follow(response.xpath(self.vacancy_xpath['company_url']).get(), callback=self.company_parse)
     
     def company_parse(self, response, **kwargs):
-        item = []
-        if 1:
-            yield {}
-        else:
-            yield from self.company_parse_B(response, item=item)
-    
-    def company_parse_B(self, response, **kwargs):
-        if 1:
-            yield {}
-        else:
-            for r in self.company_parse_C(response):
-                yield r
-    
-    def company_parse_C(self, response, **kwargs):
-        yield {}
+        loader = HHCompanyLoader(response=response)
+        loader.add_value('url', response.url)
+        for key, value in self.company_xpath.items():
+            loader.add_xpath(key, value)
+        
+        yield loader.load_item()
+   
