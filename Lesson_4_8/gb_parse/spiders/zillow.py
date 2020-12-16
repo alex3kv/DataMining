@@ -30,8 +30,7 @@ class ZillowSpider(scrapy.Spider):
         while True:
             for _ in range(10):
                 media_col.send_keys(Keys.PAGE_DOWN)
-            tmp_len_pictures = len(
-                media_col.find_elements_by_xpath('//picture[contains(@class, "media-stream-photo")]'))
+            tmp_len_pictures = len(media_col.find_elements_by_xpath('//picture[contains(@class, "media-stream-photo")]'))
             if tmp_len_pictures == len_pictures:
                 break
             len_pictures = tmp_len_pictures

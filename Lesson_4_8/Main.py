@@ -8,6 +8,7 @@ from gb_parse import settings
 
 from gb_parse.spiders.autoyoula import AutoyoulaSpider
 from gb_parse.spiders.hhru import HhruSpider
+from gb_parse.spiders.zillow import ZillowSpider
 from gb_parse.spiders.instagram import InstagramSpider
 
 if __name__ == '__main__':
@@ -20,6 +21,7 @@ if __name__ == '__main__':
 
     #crawl_proc.crawl(AutoyoulaSpider)
     #crawl_proc.crawl(HhruSpider)
+    #crawl_proc.crawl(ZillowSpider)
 
     hash_tags = ['python', 'code']
     crawl_proc.crawl(InstagramSpider, tags=hash_tags, login=os.getenv('INST_LOGIN'), enc_password=os.getenv('INST_PSWD'))
