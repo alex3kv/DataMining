@@ -34,3 +34,16 @@ class HHCompanyItem(scrapy.Item):
     name = scrapy.Field()    
     company_url = scrapy.Field()
     description = scrapy.Field()
+
+class Insta(scrapy.Item):
+    _id = scrapy.Field()
+    date_parse = scrapy.Field()
+    data = scrapy.Field()
+    img = scrapy.Field()
+
+class InstaTag(Insta):
+    pass
+
+
+class InstaPost(Insta):
+    pass
