@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="gb_dm_selenium.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="gb_parse\items.py" />
     <Compile Include="gb_parse\loaders.py">
       <SubType>Code</SubType>
@@ -33,6 +36,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gb_parse\spiders\instagram.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gb_parse\spiders\zillow.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gb_parse\spiders\__init__.py" />
