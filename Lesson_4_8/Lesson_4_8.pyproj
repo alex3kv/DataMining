@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>69b880c7-7d3f-4de7-acca-b479f6f7d296</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Main.py</StartupFile>
+    <StartupFile>doc_parse.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="doc_parse.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="gb_dm_selenium.py">
       <SubType>Code</SubType>
     </Compile>
