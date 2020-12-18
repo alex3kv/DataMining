@@ -48,8 +48,7 @@ class InstagramSpider(scrapy.Spider):
 
     def user_page_parse(self, response):
         user_data = self.js_data_extract(response)['entry_data']['ProfilePage'][0]['graphql']['user']
-        yield InstaUser(date_parse=dt.datetime.utcnow(),
-            data=user_data)
+        yield InstaUser(date_parse=dt.datetime.utcnow(), data=user_data)
 
         yield from self.get_api_follow_request(response, user_data)
 

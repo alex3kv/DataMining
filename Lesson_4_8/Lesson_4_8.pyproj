@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>69b880c7-7d3f-4de7-acca-b479f6f7d296</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>doc_parse.py</StartupFile>
+    <StartupFile>Main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
