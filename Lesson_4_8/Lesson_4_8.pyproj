@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="doc_parse.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="gb_dm_selenium.py">
       <SubType>Code</SubType>
     </Compile>
