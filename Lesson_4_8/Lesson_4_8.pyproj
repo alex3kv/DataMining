@@ -22,10 +22,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="gb_parse\items.py" />
+    <Compile Include="gb_parse\loaders.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="gb_parse\middlewares.py" />
     <Compile Include="gb_parse\pipelines.py" />
     <Compile Include="gb_parse\settings.py" />
     <Compile Include="gb_parse\spiders\autoyoula.py" />
+    <Compile Include="gb_parse\spiders\hhru.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="gb_parse\spiders\__init__.py" />
     <Compile Include="gb_parse\__init__.py" />
     <Compile Include="Main.py" />
